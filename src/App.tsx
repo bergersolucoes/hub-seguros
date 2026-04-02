@@ -96,9 +96,11 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['admin', 'dono_corretora', 'operador_corretora']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/corretora/dashboard" element={<CorretoraDashboard />} />
               <Route path="/corretora/oportunidades" element={<CorretoraOportunidades />} />
+              <Route path="/corretora/oportunidades/:id" element={<CorretoraOportunidadeDetail />} />
               <Route path="/corretora/clientes" element={<CorretoraClientes />} />
               <Route path="/corretora/financeiro" element={<CorretoraFinanceiro />} />
               <Route path="/corretora/perfil" element={<CorretoraPerfil />} />
+              <Route path="/corretora/equipe" element={<CorretoraEquipe />} />
             </Route>
 
             {/* Admin routes */}
