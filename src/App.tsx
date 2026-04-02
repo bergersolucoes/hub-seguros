@@ -25,6 +25,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 // Dispatcher pages
 import DispatcherDashboard from "./pages/dispatcher/Dashboard";
 import DispatcherLeads from "./pages/dispatcher/Leads";
+import DispatcherLeadDetail from "./pages/dispatcher/LeadDetail";
 import DispatcherOportunidades from "./pages/dispatcher/Oportunidades";
 import DispatcherCorretoras from "./pages/dispatcher/Corretoras";
 import DispatcherProdutos from "./pages/dispatcher/Produtos";
@@ -79,6 +80,7 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['admin', 'dispatcher']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/dispatcher/dashboard" element={<DispatcherDashboard />} />
               <Route path="/dispatcher/leads" element={<DispatcherLeads />} />
+              <Route path="/dispatcher/leads/:id" element={<DispatcherLeadDetail />} />
               <Route path="/dispatcher/oportunidades" element={<DispatcherOportunidades />} />
               <Route path="/dispatcher/corretoras" element={<DispatcherCorretoras />} />
               <Route path="/dispatcher/corretoras/:id" element={<DispatcherCorretoraDetail />} />
