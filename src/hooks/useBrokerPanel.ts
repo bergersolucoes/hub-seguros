@@ -168,8 +168,15 @@ export function useUpdateOpportunityStatus() {
         }
       }
 
-      // If closed, generate billable event if fee exists
-      if (newStatus === 'fechada') {
+      // Generate billable events based on status transitions
+      const feeTypeForStatus: Record<string, string> = {
+        aceita: 'accepted_lead',
+        proposta_emitida: 'proposal',
+        fechada: 'closed_sale',
+      };
+
+      const feeType = feeTypeForStatus[newStatus];
+      if (feeType) {
         const { data: opp } = await supabase
           .from('opportunities')
           .select('broker_id, product_id')
@@ -180,7 +187,7 @@ export function useUpdateOpportunityStatus() {
             .from('fees')
             .select('*')
             .eq('broker_id', opp.broker_id)
-            .eq('fee_type', 'closed_sale')
+            .eq('fee_type', feeType)
             .eq('is_active', true)
             .maybeSingle();
           if (fee) {
@@ -189,7 +196,7 @@ export function useUpdateOpportunityStatus() {
               broker_id: opp.broker_id,
               opportunity_id: id,
               fee_id: fee.id,
-              event_type: 'closed_sale',
+              event_type: feeType,
               amount: fee.amount,
               reference_month: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
               status: 'pending',
