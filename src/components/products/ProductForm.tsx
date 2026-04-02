@@ -7,16 +7,30 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import type { Product } from '@/hooks/useProducts';
 
+type ProductFormData = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
+
+type ProductFormState = {
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  is_active: boolean;
+  is_featured: boolean;
+  public_page_enabled: boolean;
+  default_fee_type: string;
+  default_fee_value: string;
+};
+
 interface ProductFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product?: Product | null;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ProductFormData) => void;
   isLoading?: boolean;
 }
 
 export function ProductForm({ open, onOpenChange, product, onSubmit, isLoading }: ProductFormProps) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<ProductFormState>({
     name: '',
     slug: '',
     category: '',
@@ -58,7 +72,8 @@ export function ProductForm({ open, onOpenChange, product, onSubmit, isLoading }
     });
   };
 
-  const set = (key: string, value: any) => setForm((prev) => ({ ...prev, [key]: value }));
+  const set = <K extends keyof ProductFormState>(key: K, value: ProductFormState[K]) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

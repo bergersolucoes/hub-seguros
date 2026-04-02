@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, Plus } from 'lucide-react';
-import { useBrokerProducts, useBrokerProductMutations } from '@/hooks/useBrokers';
+import { useBrokerProducts, useBrokerProductMutations, type BrokerProductLink } from '@/hooks/useBrokers';
 import { useProducts } from '@/hooks/useProducts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -62,7 +62,7 @@ export function BrokerProducts({ brokerId }: { brokerId: string }) {
           <TableBody>
             {linked.map((bp) => (
               <TableRow key={bp.id}>
-                <TableCell className="font-medium">{(bp as any).products?.name || '—'}</TableCell>
+                <TableCell className="font-medium">{(bp as BrokerProductLink).products?.name || '—'}</TableCell>
                 <TableCell>{bp.custom_fee_type ? `${bp.custom_fee_type}: R$ ${bp.custom_fee_value}` : '—'}</TableCell>
                 <TableCell>{bp.max_leads_per_week ?? '—'}</TableCell>
                 <TableCell><Badge variant={bp.is_active ? 'default' : 'secondary'}>{bp.is_active ? 'Ativo' : 'Inativo'}</Badge></TableCell>

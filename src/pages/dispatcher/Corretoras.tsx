@@ -9,6 +9,8 @@ import { useBrokers, useBrokerMutations } from '@/hooks/useBrokers';
 import { BrokerForm } from '@/components/brokers/BrokerForm';
 import type { Broker } from '@/hooks/useBrokers';
 
+type BrokerFormData = Omit<Broker, 'id' | 'created_at' | 'updated_at'>;
+
 export default function DispatcherCorretoras() {
   const { data: brokers, isLoading } = useBrokers();
   const { create, update } = useBrokerMutations();
@@ -23,7 +25,7 @@ export default function DispatcherCorretoras() {
     (b.cnpj || '').includes(search)
   );
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: BrokerFormData) => {
     if (editing) {
       update.mutate({ id: editing.id, ...data }, { onSuccess: () => { setFormOpen(false); setEditing(null); } });
     } else {

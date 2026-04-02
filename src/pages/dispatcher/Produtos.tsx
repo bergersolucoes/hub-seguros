@@ -9,6 +9,8 @@ import { useProducts, useProductMutations } from '@/hooks/useProducts';
 import { ProductForm } from '@/components/products/ProductForm';
 import type { Product } from '@/hooks/useProducts';
 
+type ProductFormData = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
+
 export default function DispatcherProdutos() {
   const { data: products, isLoading } = useProducts();
   const { create, update } = useProductMutations();
@@ -22,7 +24,7 @@ export default function DispatcherProdutos() {
     p.slug.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: ProductFormData) => {
     if (editing) {
       update.mutate({ id: editing.id, ...data }, { onSuccess: () => { setFormOpen(false); setEditing(null); } });
     } else {

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Json } from '@/integrations/supabase/types';
 
 export type Product = {
   id: string;
@@ -15,6 +16,41 @@ export type Product = {
   default_fee_value: number | null;
   created_at: string;
   updated_at: string;
+};
+
+export type ProductFormField = {
+  id: string;
+  product_id: string;
+  field_key: string;
+  label: string;
+  field_type: string;
+  placeholder: string | null;
+  is_required: boolean | null;
+  sort_order: number | null;
+  options_json: Json | null;
+  created_at: string;
+};
+
+type ProductFormFieldPayload = {
+  product_id: string;
+  field_key: string;
+  label: string;
+  field_type: string;
+  placeholder?: string;
+  is_required?: boolean;
+  sort_order?: number;
+  options_json?: Json;
+};
+
+type ProductFormFieldUpdate = {
+  id: string;
+  field_key?: string;
+  label?: string;
+  field_type?: string;
+  placeholder?: string;
+  is_required?: boolean;
+  sort_order?: number;
+  options_json?: Json;
 };
 
 export function useProducts() {
@@ -87,7 +123,7 @@ export function useProductFormFields(productId: string | undefined) {
         .eq('product_id', productId!)
         .order('sort_order');
       if (error) throw error;
-      return data;
+      return data as ProductFormField[];
     },
   });
 }
@@ -97,7 +133,7 @@ export function useProductFormFieldMutations() {
   const { toast } = useToast();
 
   const create = useMutation({
-    mutationFn: async (field: { product_id: string; field_key: string; label: string; field_type: string; placeholder?: string; is_required?: boolean; sort_order?: number; options_json?: any }) => {
+    mutationFn: async (field: ProductFormFieldPayload) => {
       const { error } = await supabase.from('product_form_fields').insert(field);
       if (error) throw error;
     },
@@ -106,7 +142,7 @@ export function useProductFormFieldMutations() {
   });
 
   const update = useMutation({
-    mutationFn: async ({ id, ...field }: { id: string } & Partial<{ field_key: string; label: string; field_type: string; placeholder: string; is_required: boolean; sort_order: number; options_json: any }>) => {
+    mutationFn: async ({ id, ...field }: ProductFormFieldUpdate) => {
       const { error } = await supabase.from('product_form_fields').update(field).eq('id', id);
       if (error) throw error;
     },

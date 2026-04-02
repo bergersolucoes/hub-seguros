@@ -25,6 +25,28 @@ export type Broker = {
   updated_at: string;
 };
 
+export type BrokerRegion = {
+  id: string;
+  broker_id: string;
+  state: string | null;
+  city: string | null;
+  zip_start: string | null;
+  zip_end: string | null;
+};
+
+export type BrokerProductLink = {
+  id: string;
+  broker_id: string;
+  product_id: string;
+  is_active: boolean | null;
+  custom_fee_type: string | null;
+  custom_fee_value: number | null;
+  priority_rank: number | null;
+  max_leads_per_week: number | null;
+  created_at: string;
+  products?: { name: string; slug: string } | null;
+};
+
 export function useBrokers() {
   return useQuery({
     queryKey: ['brokers'],
@@ -91,7 +113,7 @@ export function useBrokerRegions(brokerId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from('broker_regions').select('*').eq('broker_id', brokerId!);
       if (error) throw error;
-      return data;
+      return data as BrokerRegion[];
     },
   });
 }
@@ -130,7 +152,7 @@ export function useBrokerProducts(brokerId: string | undefined) {
         .select('*, products(name, slug)')
         .eq('broker_id', brokerId!);
       if (error) throw error;
-      return data;
+      return data as BrokerProductLink[];
     },
   });
 }

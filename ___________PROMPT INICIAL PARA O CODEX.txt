@@ -1,0 +1,4 @@
+Leia primeiro os arquivos AGENTS.md e docs/contexto-projeto.md.
+Depois analise o projeto inteiro antes de sugerir qualquer alteração.
+Não altere nada ainda.
+Primeiro me mostre um diagnóstico e um plano em etapas pequenas.

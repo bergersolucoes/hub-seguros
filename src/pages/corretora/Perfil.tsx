@@ -14,6 +14,7 @@ import { useRole } from '@/hooks/useRole';
 import { useToast } from '@/hooks/use-toast';
 import { Building2, MapPin, Package, Save, Trash2, Plus } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { Broker, BrokerProductLink, BrokerRegion } from '@/hooks/useBrokers';
 
 export default function CorretoraPerfil() {
   const { isDonoCorretora } = useRole();
@@ -27,7 +28,7 @@ export default function CorretoraPerfil() {
   const { toast } = useToast();
 
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState<Record<string, string | number | boolean>>({});
+  const [form, setForm] = useState<Partial<Broker>>({});
   const [newRegion, setNewRegion] = useState({ state: '', city: '' });
   const [newProductId, setNewProductId] = useState('');
 
@@ -53,7 +54,7 @@ export default function CorretoraPerfil() {
   };
 
   const handleSave = async () => {
-    await update.mutateAsync({ id: broker.id, ...form } as any);
+    await update.mutateAsync({ id: broker.id, ...form });
     setEditing(false);
     toast({ title: 'Perfil atualizado' });
   };
@@ -70,7 +71,7 @@ export default function CorretoraPerfil() {
     setNewProductId('');
   };
 
-  const linkedProductIds = brokerProducts?.map((bp: any) => bp.product_id) || [];
+  const linkedProductIds = brokerProducts?.map((bp: BrokerProductLink) => bp.product_id) || [];
   const availableProducts = products?.filter((p) => !linkedProductIds.includes(p.id)) || [];
 
   return (
@@ -126,7 +127,7 @@ export default function CorretoraPerfil() {
           <Card>
             <CardHeader><CardTitle className="flex items-center gap-2"><MapPin className="h-4 w-4" />Regiões de Atuação</CardTitle></CardHeader>
             <CardContent className="space-y-3">
-              {regions?.map((r: any) => (
+              {regions?.map((r: BrokerRegion) => (
                 <div key={r.id} className="flex items-center justify-between">
                   <Badge variant="outline">{[r.state, r.city].filter(Boolean).join(' — ')}</Badge>
                   {isDonoCorretora && (
@@ -150,7 +151,7 @@ export default function CorretoraPerfil() {
           <Card>
             <CardHeader><CardTitle className="flex items-center gap-2"><Package className="h-4 w-4" />Produtos</CardTitle></CardHeader>
             <CardContent className="space-y-3">
-              {brokerProducts?.map((bp: any) => (
+              {brokerProducts?.map((bp: BrokerProductLink) => (
                 <div key={bp.id} className="flex items-center justify-between">
                   <Badge variant="secondary">{bp.products?.name || bp.product_id}</Badge>
                   {isDonoCorretora && (

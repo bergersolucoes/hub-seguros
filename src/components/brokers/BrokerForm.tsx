@@ -8,18 +8,39 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Broker } from '@/hooks/useBrokers';
 
+type BrokerFormData = Omit<Broker, 'id' | 'created_at' | 'updated_at'>;
+
+type BrokerFormState = {
+  company_name: string;
+  trade_name: string;
+  cnpj: string;
+  contact_name: string;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  city: string;
+  state: string;
+  address: string;
+  is_active: boolean;
+  priority_level: number;
+  weekly_capacity: number;
+  accepts_auto_distribution: boolean;
+  accepts_manual_distribution: boolean;
+  notes: string;
+};
+
 interface BrokerFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   broker?: Broker | null;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: BrokerFormData) => void;
   isLoading?: boolean;
 }
 
 const STATES = ['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO'];
 
 export function BrokerForm({ open, onOpenChange, broker, onSubmit, isLoading }: BrokerFormProps) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<BrokerFormState>({
     company_name: '',
     trade_name: '',
     cnpj: '',
@@ -72,7 +93,8 @@ export function BrokerForm({ open, onOpenChange, broker, onSubmit, isLoading }: 
     onSubmit(form);
   };
 
-  const set = (key: string, value: any) => setForm((prev) => ({ ...prev, [key]: value }));
+  const set = <K extends keyof BrokerFormState>(key: K, value: BrokerFormState[K]) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
