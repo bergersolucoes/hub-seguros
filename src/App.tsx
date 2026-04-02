@@ -37,9 +37,11 @@ import DispatcherRelatorios from "./pages/dispatcher/Relatorios";
 // Corretora pages
 import CorretoraDashboard from "./pages/corretora/Dashboard";
 import CorretoraOportunidades from "./pages/corretora/Oportunidades";
+import CorretoraOportunidadeDetail from "./pages/corretora/OportunidadeDetail";
 import CorretoraClientes from "./pages/corretora/Clientes";
 import CorretoraFinanceiro from "./pages/corretora/Financeiro";
 import CorretoraPerfil from "./pages/corretora/Perfil";
+import CorretoraEquipe from "./pages/corretora/Equipe";
 
 // Admin pages
 import AdminUsuarios from "./pages/admin/Usuarios";
