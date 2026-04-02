@@ -81,7 +81,9 @@ const App = () => (
               <Route path="/dispatcher/leads" element={<DispatcherLeads />} />
               <Route path="/dispatcher/oportunidades" element={<DispatcherOportunidades />} />
               <Route path="/dispatcher/corretoras" element={<DispatcherCorretoras />} />
+              <Route path="/dispatcher/corretoras/:id" element={<DispatcherCorretoraDetail />} />
               <Route path="/dispatcher/produtos" element={<DispatcherProdutos />} />
+              <Route path="/dispatcher/produtos/:id" element={<DispatcherProdutoDetail />} />
               <Route path="/dispatcher/financeiro" element={<DispatcherFinanceiro />} />
               <Route path="/dispatcher/relatorios" element={<DispatcherRelatorios />} />
             </Route>
