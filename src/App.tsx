@@ -37,9 +37,11 @@ import DispatcherRelatorios from "./pages/dispatcher/Relatorios";
 // Corretora pages
 import CorretoraDashboard from "./pages/corretora/Dashboard";
 import CorretoraOportunidades from "./pages/corretora/Oportunidades";
+import CorretoraOportunidadeDetail from "./pages/corretora/OportunidadeDetail";
 import CorretoraClientes from "./pages/corretora/Clientes";
 import CorretoraFinanceiro from "./pages/corretora/Financeiro";
 import CorretoraPerfil from "./pages/corretora/Perfil";
+import CorretoraEquipe from "./pages/corretora/Equipe";
 
 // Admin pages
 import AdminUsuarios from "./pages/admin/Usuarios";
@@ -94,9 +96,11 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['admin', 'dono_corretora', 'operador_corretora']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/corretora/dashboard" element={<CorretoraDashboard />} />
               <Route path="/corretora/oportunidades" element={<CorretoraOportunidades />} />
+              <Route path="/corretora/oportunidades/:id" element={<CorretoraOportunidadeDetail />} />
               <Route path="/corretora/clientes" element={<CorretoraClientes />} />
               <Route path="/corretora/financeiro" element={<CorretoraFinanceiro />} />
               <Route path="/corretora/perfil" element={<CorretoraPerfil />} />
+              <Route path="/corretora/equipe" element={<CorretoraEquipe />} />
             </Route>
 
             {/* Admin routes */}
