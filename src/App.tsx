@@ -28,6 +28,8 @@ import DispatcherLeads from "./pages/dispatcher/Leads";
 import DispatcherOportunidades from "./pages/dispatcher/Oportunidades";
 import DispatcherCorretoras from "./pages/dispatcher/Corretoras";
 import DispatcherProdutos from "./pages/dispatcher/Produtos";
+import DispatcherCorretoraDetail from "./pages/dispatcher/CorretoraDetail";
+import DispatcherProdutoDetail from "./pages/dispatcher/ProdutoDetail";
 import DispatcherFinanceiro from "./pages/dispatcher/Financeiro";
 import DispatcherRelatorios from "./pages/dispatcher/Relatorios";
 
