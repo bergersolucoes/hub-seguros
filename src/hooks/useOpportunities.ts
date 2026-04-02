@@ -116,15 +116,11 @@ export function useDispatchLead() {
       if (leadErr) throw leadErr;
 
       // Increment broker capacity
-      const { error: capErr } = await supabase.rpc('increment_broker_capacity', { _broker_id: brokerId });
-      if (capErr) {
-        // Fallback: manual increment
-        const { data: broker } = await supabase.from('brokers').select('current_capacity_used').eq('id', brokerId).single();
-        if (broker) {
-          await supabase.from('brokers').update({
-            current_capacity_used: (broker.current_capacity_used ?? 0) + 1,
-          }).eq('id', brokerId);
-        }
+      const { data: broker } = await supabase.from('brokers').select('current_capacity_used').eq('id', brokerId).single();
+      if (broker) {
+        await supabase.from('brokers').update({
+          current_capacity_used: (broker.current_capacity_used ?? 0) + 1,
+        }).eq('id', brokerId);
       }
 
       // Create status history
