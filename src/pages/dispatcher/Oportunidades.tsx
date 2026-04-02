@@ -8,7 +8,7 @@ import { OpportunityStatusBadge } from '@/components/leads/OpportunityStatusBadg
 import { useOpportunities, useOpportunityCounts, type OpportunityStatus } from '@/hooks/useOpportunities';
 import { useBrokers } from '@/hooks/useBrokers';
 import { useProducts } from '@/hooks/useProducts';
-import { Search, Send, AlertTriangle, Clock } from 'lucide-react';
+import { Send, AlertTriangle, Clock } from 'lucide-react';
 import { format, isPast } from 'date-fns';
 
 const statusOptions: { value: OpportunityStatus | ''; label: string }[] = [

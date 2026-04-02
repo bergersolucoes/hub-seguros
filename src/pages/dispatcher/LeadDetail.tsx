@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
+
 import { LeadStatusBadge } from '@/components/leads/LeadStatusBadge';
 import { DispatchModal } from '@/components/leads/DispatchModal';
 import { useLead, useLeadAnswers, useLeadMutations, type LeadStatus } from '@/hooks/useLeads';

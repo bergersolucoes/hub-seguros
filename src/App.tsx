@@ -80,6 +80,7 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['admin', 'dispatcher']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/dispatcher/dashboard" element={<DispatcherDashboard />} />
               <Route path="/dispatcher/leads" element={<DispatcherLeads />} />
+              <Route path="/dispatcher/leads/:id" element={<DispatcherLeadDetail />} />
               <Route path="/dispatcher/oportunidades" element={<DispatcherOportunidades />} />
               <Route path="/dispatcher/corretoras" element={<DispatcherCorretoras />} />
               <Route path="/dispatcher/corretoras/:id" element={<DispatcherCorretoraDetail />} />
