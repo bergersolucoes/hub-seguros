@@ -898,6 +898,20 @@ export type Database = {
         Returns: boolean
       }
       is_admin_or_dispatcher: { Args: { _auth_id: string }; Returns: boolean }
+      suggest_brokers_for_lead: {
+        Args: { _lead_id: string }
+        Returns: {
+          available_capacity: number
+          broker_id: string
+          company_name: string
+          current_capacity_used: number
+          priority_level: number
+          product_match: boolean
+          region_match: boolean
+          trade_name: string
+          weekly_capacity: number
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "dispatcher" | "dono_corretora" | "operador_corretora"
