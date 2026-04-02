@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { useBrokerTeam } from '@/hooks/useBrokerPanel';
 import { useRole } from '@/hooks/useRole';
 import { Users, Plus, UserCheck, UserX } from 'lucide-react';
