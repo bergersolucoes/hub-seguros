@@ -1,154 +1,63 @@
 
 
-# Hub de Oportunidades de Seguros — Plano de Implementação (M1)
+# Migration: Foreign Keys e CHECK Constraints
 
-## Visão Geral
+## O que será feito
 
-Construir a base estrutural completa da aplicação: autenticação, sistema de roles, layouts por perfil, rotas protegidas e páginas placeholder para todas as áreas. Supabase será usado para auth e banco de dados.
+Uma migration para adicionar todas as foreign keys e CHECK constraints ausentes nas tabelas existentes, conforme o schema definido pelo usuário.
 
----
+## Foreign Keys a adicionar
 
-## Etapa 1 — Supabase + Autenticação
+| Tabela | Coluna | Referencia |
+|--------|--------|------------|
+| users | broker_id | brokers(id) ON DELETE SET NULL |
+| broker_regions | broker_id | brokers(id) ON DELETE CASCADE |
+| broker_products | broker_id | brokers(id) ON DELETE CASCADE |
+| broker_products | product_id | products(id) ON DELETE CASCADE |
+| product_form_fields | product_id | products(id) ON DELETE CASCADE |
+| leads | product_id | products(id) ON DELETE SET NULL |
+| lead_answers | lead_id | leads(id) ON DELETE CASCADE |
+| opportunities | lead_id | leads(id) ON DELETE CASCADE |
+| opportunities | broker_id | brokers(id) ON DELETE RESTRICT |
+| opportunities | dispatcher_id | users(id) ON DELETE SET NULL |
+| opportunities | product_id | products(id) ON DELETE SET NULL |
+| opportunity_status_history | opportunity_id | opportunities(id) ON DELETE CASCADE |
+| opportunity_status_history | changed_by_user_id | users(id) ON DELETE SET NULL |
+| routing_rules | product_id | products(id) ON DELETE SET NULL |
+| routing_rules | broker_id | brokers(id) ON DELETE CASCADE |
+| fees | broker_id | brokers(id) ON DELETE CASCADE |
+| fees | product_id | products(id) ON DELETE SET NULL |
+| billable_events | broker_id | brokers(id) ON DELETE CASCADE |
+| billable_events | opportunity_id | opportunities(id) ON DELETE SET NULL |
+| billable_events | fee_id | fees(id) ON DELETE RESTRICT |
+| invoices | broker_id | brokers(id) ON DELETE CASCADE |
+| invoice_items | invoice_id | invoices(id) ON DELETE CASCADE |
+| invoice_items | billable_event_id | billable_events(id) ON DELETE SET NULL |
+| audit_logs | user_id | users(id) ON DELETE SET NULL |
 
-**Ativar Lovable Cloud** para provisionar Supabase automaticamente.
+## CHECK Constraints a adicionar
 
-**Tabelas e tipos criados via migrations:**
+| Tabela | Coluna | Valores permitidos |
+|--------|--------|--------------------|
+| users | role | admin, dispatcher, broker_owner, broker_operator |
+| leads | status | novo, em_triagem, qualificado, descartado, aguardando_despacho, despachado, redistribuicao, encerrado |
+| opportunities | route_mode | manual, suggested, automatic |
+| opportunities | status | enviada, aceita, recusada, expirada, em_atendimento, contato_realizado, proposta_emitida, negociacao, fechada, perdida |
+| fees | fee_type | setup, monthly, qualified_lead, accepted_lead, proposal, closed_sale |
+| billable_events | status | pending, billed, paid, cancelled |
+| invoices | status | open, sent, paid, overdue, cancelled |
 
-- `user_roles` table com enum `app_role` (`admin`, `dispatcher`, `dono_corretora`, `operador_corretora`)
-- Função `has_role(uuid, app_role)` com `SECURITY DEFINER`
-- RLS na tabela `user_roles`
-- Trigger para criar role padrão no signup (opcional, pode ser atribuído pelo admin)
+## UNIQUE Constraint
 
-**Auth pages:**
-- `/login` — email/senha com Supabase Auth
-- `/esqueci-senha` — reset password flow
-- `/reset-password` — página para definir nova senha
+- `broker_products (broker_id, product_id)` — evitar duplicidade de vínculo
 
----
+## Trigger updated_at
 
-## Etapa 2 — Tipos e Contexto de Auth
+- Conectar o trigger `update_updated_at_column` às tabelas: users, brokers, leads, opportunities, products
 
-**Arquivos:**
-- `src/types/roles.ts` — tipos para `AppRole`, constantes de roles
-- `src/types/entities.ts` — interfaces placeholder para `Lead`, `Oportunidade`, `Corretora`, `Produto`, `Roteamento`, `Fee`, `BillableEvent`, `Invoice`
-- `src/contexts/AuthContext.tsx` — provider com estado do usuário, role atual, loading
-- `src/hooks/useAuth.ts` — hook para consumir o contexto
-- `src/hooks/useRole.ts` — hook para verificar role do usuário
+## Detalhes técnicos
 
----
-
-## Etapa 3 — Layout e Navegação
-
-**Componentes de layout:**
-- `src/components/layouts/PublicLayout.tsx` — header + footer para páginas públicas
-- `src/components/layouts/AuthenticatedLayout.tsx` — sidebar + header + main content
-- `src/components/layouts/Sidebar.tsx` — usando Shadcn Sidebar, com menus condicionais por role
-
-**Sidebar condicional:**
-- Admin: Usuários, Produtos, Regras, Fees, Logs
-- Dispatcher: Dashboard, Leads, Oportunidades, Corretoras, Produtos, Financeiro, Relatórios
-- Corretora (dono/operador): Dashboard, Oportunidades, Clientes, Financeiro, Perfil
-
----
-
-## Etapa 4 — Proteção de Rotas
-
-- `src/components/ProtectedRoute.tsx` — verifica auth + role, redireciona para `/login` ou página de acesso negado
-- Cada grupo de rotas envolto com a role correspondente
-
----
-
-## Etapa 5 — Páginas (todas como placeholder estruturado)
-
-**Públicas (sem auth):**
-- `/` — Landing page com CTA para cotação
-- `/seguros` — Lista de produtos
-- `/seguro/auto`, `/seguro/saude`, `/seguro/consorcio` — Detalhe do produto
-- `/cotacao/:slug` — Formulário de cotação (captura de lead)
-- `/obrigado` — Thank you page
-
-**Dispatcher (7 páginas):**
-- Dashboard, Leads, Oportunidades, Corretoras, Produtos, Financeiro, Relatórios
-
-**Corretora (5 páginas):**
-- Dashboard, Oportunidades, Clientes, Financeiro, Perfil
-
-**Admin (5 páginas):**
-- Usuários, Produtos, Regras, Fees, Logs
-
-Cada página terá título, breadcrumb, e placeholders para filtros/tabelas.
-
----
-
-## Etapa 6 — Registro de Rotas
-
-Atualizar `App.tsx` com todas as rotas organizadas em grupos:
-- Rotas públicas (PublicLayout)
-- Rotas de auth (sem layout)
-- Rotas protegidas por role (AuthenticatedLayout + ProtectedRoute)
-
----
-
-## Estrutura de Pastas Final
-
-```text
-src/
-├── contexts/
-│   └── AuthContext.tsx
-├── hooks/
-│   ├── useAuth.ts
-│   └── useRole.ts
-├── types/
-│   ├── roles.ts
-│   └── entities.ts
-├── components/
-│   ├── layouts/
-│   │   ├── PublicLayout.tsx
-│   │   ├── AuthenticatedLayout.tsx
-│   │   └── AppSidebar.tsx
-│   ├── ProtectedRoute.tsx
-│   └── NavLink.tsx (existente)
-├── pages/
-│   ├── Index.tsx (landing)
-│   ├── auth/
-│   │   ├── Login.tsx
-│   │   ├── ForgotPassword.tsx
-│   │   └── ResetPassword.tsx
-│   ├── public/
-│   │   ├── Seguros.tsx
-│   │   ├── SeguroAuto.tsx
-│   │   ├── SeguroSaude.tsx
-│   │   ├── SeguroConsorcio.tsx
-│   │   ├── Cotacao.tsx
-│   │   └── Obrigado.tsx
-│   ├── dispatcher/
-│   │   ├── Dashboard.tsx
-│   │   ├── Leads.tsx
-│   │   ├── Oportunidades.tsx
-│   │   ├── Corretoras.tsx
-│   │   ├── Produtos.tsx
-│   │   ├── Financeiro.tsx
-│   │   └── Relatorios.tsx
-│   ├── corretora/
-│   │   ├── Dashboard.tsx
-│   │   ├── Oportunidades.tsx
-│   │   ├── Clientes.tsx
-│   │   ├── Financeiro.tsx
-│   │   └── Perfil.tsx
-│   └── admin/
-│       ├── Usuarios.tsx
-│       ├── Produtos.tsx
-│       ├── Regras.tsx
-│       ├── Fees.tsx
-│       └── Logs.tsx
-```
-
-## Detalhes Técnicos
-
-- **Supabase Auth**: email/senha, `onAuthStateChange` listener
-- **Roles**: tabela separada `user_roles`, nunca no perfil
-- **RLS**: `has_role()` SECURITY DEFINER function
-- **Sidebar**: Shadcn `<Sidebar collapsible="icon">` com `SidebarProvider`
-- **Entidades preservadas**: lead, oportunidade, corretora, produto, roteamento, fee, billable_event, invoice — todas com tipos TypeScript definidos, prontas para conexão com tabelas
-- **Design**: Tailwind, badges com status visuais, esqueleto de filtros e busca nas listas
+- Uma única migration SQL com todos os `ALTER TABLE ... ADD CONSTRAINT`
+- Uso de `IF NOT EXISTS` onde possível, ou `DO $$ ... EXCEPTION WHEN ...` para idempotência
+- Nenhuma alteração de código frontend necessária — apenas integridade referencial no banco
 
