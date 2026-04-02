@@ -25,6 +25,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 // Dispatcher pages
 import DispatcherDashboard from "./pages/dispatcher/Dashboard";
 import DispatcherLeads from "./pages/dispatcher/Leads";
+import DispatcherLeadDetail from "./pages/dispatcher/LeadDetail";
 import DispatcherOportunidades from "./pages/dispatcher/Oportunidades";
 import DispatcherCorretoras from "./pages/dispatcher/Corretoras";
 import DispatcherProdutos from "./pages/dispatcher/Produtos";
