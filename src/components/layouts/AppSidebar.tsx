@@ -27,6 +27,7 @@ const corretoraItems = [
   { title: 'Oportunidades', url: '/corretora/oportunidades', icon: FileText },
   { title: 'Clientes', url: '/corretora/clientes', icon: Users },
   { title: 'Financeiro', url: '/corretora/financeiro', icon: DollarSign },
+  { title: 'Equipe', url: '/corretora/equipe', icon: UserCog },
   { title: 'Perfil', url: '/corretora/perfil', icon: UserCircle },
 ];
 
