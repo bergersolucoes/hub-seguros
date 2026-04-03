@@ -30,7 +30,7 @@ export function PublicLayout() {
               <Link to="/login">Entrar</Link>
             </Button>
             <Button size="sm" asChild>
-              <Link to="/cotacao/auto">Solicitar Cotação</Link>
+              <Link to="/seguros">Solicitar Cotação</Link>
             </Button>
           </div>
         </div>
