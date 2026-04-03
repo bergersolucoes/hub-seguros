@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -12,19 +12,49 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const [pendingRedirect, setPendingRedirect] = useState(false);
+  const { signIn, user, roles, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!pendingRedirect || loading || !user) return;
+
+    if (roles.includes('admin')) {
+      navigate('/admin/usuarios', { replace: true });
+      return;
+    }
+
+    if (roles.includes('dispatcher')) {
+      navigate('/dispatcher/dashboard', { replace: true });
+      return;
+    }
+
+    if (roles.includes('dono_corretora') || roles.includes('operador_corretora')) {
+      navigate('/corretora/dashboard', { replace: true });
+      return;
+    }
+
+    toast({
+      title: 'Acesso não configurado',
+      description: 'Seu usuário está autenticado, mas não possui um perfil válido para acessar o painel.',
+      variant: 'destructive',
+    });
+    setPendingRedirect(false);
+    setIsLoading(false);
+    navigate('/', { replace: true });
+  }, [loading, navigate, pendingRedirect, roles, toast, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     const { error } = await signIn(email, password);
-    setIsLoading(false);
     if (error) {
+      setIsLoading(false);
+      setPendingRedirect(false);
       toast({ title: 'Erro ao entrar', description: error.message, variant: 'destructive' });
     } else {
-      navigate('/dispatcher/dashboard');
+      setPendingRedirect(true);
     }
   };
 
