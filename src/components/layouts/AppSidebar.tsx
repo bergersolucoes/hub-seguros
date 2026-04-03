@@ -1,11 +1,10 @@
 import {
   LayoutDashboard, Users, FileText, Building2, Package, DollarSign,
   BarChart3, ClipboardList, UserCog, Settings, ScrollText, Shield,
-  Briefcase, UserCircle,
+  UserCircle,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
-import { useRole } from '@/hooks/useRole';
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
@@ -43,7 +42,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
-  const { isAdmin, isDispatcher, isCorretora } = useRole();
+  const currentSection = location.pathname.split('/')[1];
 
   const renderGroup = (label: string, items: typeof dispatcherItems) => (
     <SidebarGroup key={label}>
@@ -79,9 +78,9 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {isDispatcher && renderGroup('Dispatcher', dispatcherItems)}
-        {isCorretora && renderGroup('Corretora', corretoraItems)}
-        {isAdmin && renderGroup('Administração', adminItems)}
+        {currentSection === 'dispatcher' && renderGroup('Dispatcher', dispatcherItems)}
+        {currentSection === 'corretora' && renderGroup('Corretora', corretoraItems)}
+        {currentSection === 'admin' && renderGroup('Administração', adminItems)}
       </SidebarContent>
     </Sidebar>
   );
