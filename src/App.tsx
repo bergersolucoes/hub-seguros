@@ -79,7 +79,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Dispatcher routes */}
-            <Route element={<ProtectedRoute allowedRoles={['admin', 'dispatcher']}><AuthenticatedLayout /></ProtectedRoute>}>
+            <Route element={<ProtectedRoute allowedRoles={['dispatcher']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/dispatcher/dashboard" element={<DispatcherDashboard />} />
               <Route path="/dispatcher/leads" element={<DispatcherLeads />} />
               <Route path="/dispatcher/leads/:id" element={<DispatcherLeadDetail />} />
@@ -93,7 +93,7 @@ const App = () => (
             </Route>
 
             {/* Corretora routes */}
-            <Route element={<ProtectedRoute allowedRoles={['admin', 'dono_corretora', 'operador_corretora']}><AuthenticatedLayout /></ProtectedRoute>}>
+            <Route element={<ProtectedRoute allowedRoles={['dono_corretora', 'operador_corretora']}><AuthenticatedLayout /></ProtectedRoute>}>
               <Route path="/corretora/dashboard" element={<CorretoraDashboard />} />
               <Route path="/corretora/oportunidades" element={<CorretoraOportunidades />} />
               <Route path="/corretora/oportunidades/:id" element={<CorretoraOportunidadeDetail />} />
